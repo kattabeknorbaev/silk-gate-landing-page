@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SilkGate — One Application. Every University in Uzbekistan.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:ital,wght@0,200;0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+[data-theme="dark"] {
+  --bg:#0a0f1e;--bg-mid:#111827;--bg-card:#1a2540;
+  --text-pri:#f0ece3;--text-sec:#9aa3b8;--text-muted:#4a5568;
+  --border:rgba(201,168,76,0.15);--border-sub:rgba(255,255,255,0.06);
+  --gold:#c9a84c;--gold-lt:#e8c97a;--gold-dim:#7a6330;
+  --card-hover:rgba(26,37,64,0.9);--noise:.6;
+  --nav-bg:rgba(10,15,30,0.75);
+}
+[data-theme="light"] {
+  --bg:#faf8f4;--bg-mid:#f0ece3;--bg-card:#ffffff;
+  --text-pri:#1a1a2e;--text-sec:#4a5568;--text-muted:#9aa3b8;
+  --border:rgba(160,120,48,0.25);--border-sub:rgba(0,0,0,0.07);
+  --gold:#a07830;--gold-lt:#b8922a;--gold-dim:#c9a84c;
+  --card-hover:#f5f1ea;--noise:.2;
+  --nav-bg:rgba(250,248,244,0.85);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text-pri);font-family:'DM Sans',sans-serif;font-weight:300;line-height:1.7;overflow-x:hidden;transition:background .4s,color .4s;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:var(--noise);transition:opacity .4s;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.4rem 4rem;background:var(--nav-bg);backdrop-filter:blur(20px);border-bottom:1px solid var(--border-sub);transition:padding .4s,background .4s;}
+nav.scrolled{padding:0.9rem 4rem;}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:500;color:var(--text-pri);text-decoration:none;letter-spacing:.02em;transition:color .3s;}
+.nav-logo span{color:var(--gold);}
+.nav-links{display:flex;align-items:center;gap:2.5rem;list-style:none;}
+.nav-links a{color:var(--text-sec);text-decoration:none;font-size:.78rem;font-weight:400;letter-spacing:.08em;text-transform:uppercase;transition:color .3s;}
+.nav-links a:hover{color:var(--text-pri);}
+.nav-right{display:flex;align-items:center;gap:.75rem;}
+/* Controls pill */
+.ctrl-pill{display:flex;align-items:center;gap:2px;background:var(--border-sub);border:1px solid var(--border-sub);border-radius:3px;padding:3px;}
+.ctrl-btn{background:transparent;border:none;cursor:pointer;padding:.3rem .55rem;border-radius:2px;font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:400;letter-spacing:.06em;color:var(--text-muted);transition:background .2s,color .2s;display:flex;align-items:center;gap:.3rem;white-space:nowrap;}
+.ctrl-btn.active{background:var(--bg-card);color:var(--text-pri);box-shadow:0 1px 4px rgba(0,0,0,.15);}
+.ctrl-btn:hover:not(.active){color:var(--text-sec);}
+.ctrl-sep{width:1px;height:16px;background:var(--border-sub);margin:0 2px;}
+.btn-nav{background:transparent;border:1px solid var(--gold);color:var(--gold);padding:.48rem 1.3rem;border-radius:2px;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:400;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .3s;text-decoration:none;}
+.btn-nav:hover{background:var(--gold);color:var(--bg);}
+
+/* HERO */
+#hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8rem 2rem 4rem;overflow:hidden;width:100%;}
+.hero-bg{position:absolute;inset:0;transition:background .4s;}
+[data-theme="dark"] .hero-bg{background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(201,168,76,.08) 0%,transparent 70%),radial-gradient(ellipse 60% 40% at 20% 80%,rgba(26,37,64,.9) 0%,transparent 60%);}
+[data-theme="light"] .hero-bg{background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(160,120,48,.05) 0%,transparent 70%);}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(201,168,76,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,.04) 1px,transparent 1px);background-size:80px 80px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 0%,transparent 100%);}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:.75rem;font-size:.72rem;font-weight:400;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:2rem;animation:fadeUp .8s .2s both;}
+.hero-eyebrow::before,.hero-eyebrow::after{content:'';display:block;width:28px;height:1px;background:var(--gold);opacity:.6;}
+h1{font-family:'Cormorant Garamond',serif;font-size:clamp(3.5rem,8vw,7.5rem);font-weight:300;line-height:1.05;color:var(--text-pri);max-width:900px;margin-bottom:1.5rem;animation:fadeUp .9s .4s both;}
+h1 em{font-style:italic;color:var(--gold-lt);}
+.hero-sub{font-size:1.05rem;font-weight:300;color:var(--text-sec);max-width:540px;line-height:1.9;margin-bottom:3rem;animation:fadeUp .9s .6s both;}
+.hero-ctas{display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap;justify-content:center;animation:fadeUp .9s .8s both;}
+.btn-primary{background:var(--gold);color:var(--bg);border:none;padding:1rem 2.5rem;border-radius:2px;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:500;letter-spacing:.05em;cursor:pointer;transition:all .3s;text-decoration:none;display:inline-block;}
+.btn-primary:hover{background:var(--gold-lt);transform:translateY(-2px);box-shadow:0 12px 40px rgba(201,168,76,.3);}
+.btn-secondary{background:transparent;color:var(--text-pri);border:1px solid var(--border-sub);padding:1rem 2.5rem;border-radius:2px;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:400;letter-spacing:.05em;cursor:pointer;transition:all .3s;text-decoration:none;display:inline-block;}
+.btn-secondary:hover{border-color:var(--border);background:var(--border-sub);transform:translateY(-2px);}
+.hero-badge{margin-top:2rem;display:inline-flex;align-items:center;gap:.5rem;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);border:1px solid var(--border-sub);padding:.45rem 1rem;border-radius:2px;animation:fadeUp .9s 1s both;}
+.hero-badge-dot{width:6px;height:6px;background:#f59e0b;border-radius:50%;flex-shrink:0;animation:pulse 2s infinite;}
+.hero-scroll{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.5rem;color:var(--text-muted);font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;animation:fadeUp 1s 1.2s both;}
+.scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,var(--gold),transparent);animation:scrollLine 2s infinite;}
+
+/* STATS */
+.stats-bar{background:var(--bg-card);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:2.5rem 4rem;display:flex;align-items:center;justify-content:center;transition:background .4s;}
+.stat-item{flex:1;text-align:center;max-width:220px;padding:0 2rem;position:relative;}
+.stat-item:not(:last-child)::after{content:'';position:absolute;right:0;top:50%;transform:translateY(-50%);height:40px;width:1px;background:var(--border);}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;color:var(--gold);line-height:1;margin-bottom:.4rem;}
+.stat-label{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-sec);}
+
+/* SHARED */
+section{position:relative;z-index:1;}
+.section-inner{max-width:1200px;margin:0 auto;padding:0 4rem;}
+.section-eyebrow{display:inline-flex;align-items:center;gap:.75rem;font-size:.7rem;font-weight:400;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem;}
+.section-eyebrow::before{content:'';display:block;width:20px;height:1px;background:var(--gold);}
+h2{font-family:'Cormorant Garamond',serif;font-size:clamp(2.5rem,5vw,4.5rem);font-weight:300;line-height:1.1;color:var(--text-pri);margin-bottom:1.5rem;}
+h2 em{font-style:italic;color:var(--gold-lt);}
+
+/* PROBLEM */
+#problem{padding:8rem 0;background:var(--bg-mid);transition:background .4s;}
+.problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:start;margin-top:4rem;}
+.problem-text p{color:var(--text-sec);font-size:1.05rem;line-height:1.9;margin-bottom:1.5rem;}
+.problem-cards{display:flex;flex-direction:column;gap:1.25rem;}
+.problem-card{background:var(--bg);border:1px solid var(--border-sub);border-left:2px solid var(--gold-dim);padding:1.5rem 2rem;border-radius:0 4px 4px 0;transition:border-left-color .3s,transform .3s,background .4s;}
+.problem-card:hover{border-left-color:var(--gold);transform:translateX(4px);}
+.problem-card h4{font-size:.95rem;font-weight:500;color:var(--text-pri);margin-bottom:.4rem;}
+.problem-card p{font-size:.85rem;color:var(--text-sec);line-height:1.6;}
+
+/* SOLUTION */
+#solution{padding:8rem 0;background:var(--bg);transition:background .4s;}
+.solution-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:5rem;}
+.step-card{background:var(--bg-card);border:1px solid var(--border-sub);padding:3rem 2.5rem;position:relative;overflow:hidden;transition:background .3s;}
+.step-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold-dim),var(--gold));transform:scaleX(0);transform-origin:left;transition:transform .4s ease;}
+.step-card:hover::before{transform:scaleX(1);}
+.step-card:hover{background:var(--card-hover);}
+.step-num{font-family:'Cormorant Garamond',serif;font-size:5rem;font-weight:300;color:rgba(201,168,76,.1);line-height:1;margin-bottom:1.5rem;transition:color .3s;}
+.step-card:hover .step-num{color:rgba(201,168,76,.2);}
+.step-icon{width:44px;height:44px;background:rgba(201,168,76,.1);border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;font-size:1.2rem;}
+.step-card h3{font-size:1.15rem;font-weight:500;color:var(--text-pri);margin-bottom:.75rem;}
+.step-card p{font-size:.9rem;color:var(--text-sec);line-height:1.8;}
+
+/* BENEFITS */
+#benefits{padding:8rem 0;background:var(--bg-mid);transition:background .4s;}
+.benefits-split{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:4rem;}
+.benefit-panel{padding:4rem 3rem;transition:background .4s;}
+.benefit-panel.students{background:var(--bg-card);border:1px solid var(--border-sub);}
+.benefit-panel.universities{background:rgba(201,168,76,.04);border:1px solid var(--border);}
+.benefit-panel h3{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;color:var(--text-pri);margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border-sub);}
+.benefit-panel h3 span{color:var(--gold);}
+.benefit-list{list-style:none;display:flex;flex-direction:column;gap:1.25rem;}
+.benefit-list li{display:flex;align-items:flex-start;gap:1rem;font-size:.95rem;color:var(--text-sec);line-height:1.6;}
+.benefit-list li::before{content:'→';color:var(--gold);font-size:.9rem;margin-top:.05rem;flex-shrink:0;}
+
+/* UNIVERSITIES */
+#universities{padding:8rem 0;background:var(--bg);transition:background .4s;}
+.unis-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:4rem;gap:2rem;}
+.unis-count{font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--text-sec);font-style:italic;}
+.uni-marquee-wrap{overflow:hidden;position:relative;margin-bottom:2px;}
+.uni-marquee-wrap::before,.uni-marquee-wrap::after{content:'';position:absolute;top:0;bottom:0;width:120px;z-index:2;}
+.uni-marquee-wrap::before{left:0;background:linear-gradient(90deg,var(--bg),transparent);}
+.uni-marquee-wrap::after{right:0;background:linear-gradient(-90deg,var(--bg),transparent);}
+.uni-marquee{display:flex;gap:2px;width:max-content;animation:marquee 40s linear infinite;}
+.uni-marquee:hover{animation-play-state:paused;}
+.uni-card{background:var(--bg-card);border:1px solid var(--border-sub);padding:1.75rem 2rem;width:280px;flex-shrink:0;transition:border-color .3s,transform .3s,background .4s;}
+.uni-card:hover{border-color:var(--border);transform:translateY(-3px);}
+.uni-card-dot{width:6px;height:6px;background:var(--gold-dim);border-radius:50%;margin-bottom:1rem;}
+.uni-card-name{font-size:.9rem;font-weight:400;color:var(--text-pri);margin-bottom:.4rem;line-height:1.4;}
+.uni-card-location{font-size:.75rem;color:var(--text-muted);letter-spacing:.05em;}
+.uni-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-top:3rem;}
+.uni-tile{background:var(--bg-card);border:1px solid var(--border-sub);padding:2rem 1.75rem;transition:border-color .3s,background .3s;}
+.uni-tile:hover{border-color:var(--border);background:var(--card-hover);}
+.uni-tile-name{font-size:.88rem;font-weight:400;color:var(--text-pri);line-height:1.4;margin-bottom:.5rem;}
+.uni-tile-tag{display:inline-block;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dim);background:rgba(201,168,76,.08);padding:.2rem .5rem;border-radius:1px;}
+.view-all-wrap{text-align:center;margin-top:3rem;}
+
+/* STATUS */
+#status{padding:8rem 0;background:var(--bg-mid);text-align:center;transition:background .4s;}
+.status-badge{display:inline-flex;align-items:center;gap:.6rem;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);color:#d97706;font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;padding:.5rem 1.25rem;border-radius:2px;margin-bottom:3rem;}
+[data-theme="dark"] .status-badge{color:#f59e0b;}
+.status-badge-dot{width:6px;height:6px;background:#f59e0b;border-radius:50%;animation:pulse 2s infinite;}
+.status-features{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-top:5rem;text-align:left;}
+.status-feature{background:var(--bg);border:1px solid var(--border-sub);padding:2.5rem 2rem;transition:background .4s;}
+.status-feature-icon{font-size:1.5rem;margin-bottom:1.25rem;display:block;}
+.status-feature h4{font-size:.95rem;font-weight:500;color:var(--text-pri);margin-bottom:.5rem;}
+.status-feature p{font-size:.82rem;color:var(--text-sec);line-height:1.7;}
+.progress-row{display:flex;align-items:flex-start;gap:64px;justify-content:center;margin-top:4rem;flex-wrap:wrap;}
+.progress-step{display:flex;flex-direction:column;align-items:center;gap:.75rem;}
+.progress-dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:500;flex-shrink:0;}
+.progress-dot.done{background:rgba(201,168,76,.2);border:1px solid var(--gold);color:var(--gold);}
+.progress-dot.active{background:rgba(245,158,11,.15);border:1px solid #f59e0b;color:#f59e0b;animation:pulse-ring 2s infinite;}
+.progress-dot.upcoming{background:transparent;border:1px solid var(--text-muted);color:var(--text-muted);}
+.progress-label{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text-sec);text-align:center;max-width:90px;line-height:1.4;}
+
+/* CTA */
+#cta{padding:10rem 0;background:var(--bg);text-align:center;position:relative;overflow:hidden;transition:background .4s;}
+#cta::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:800px;height:800px;background:radial-gradient(ellipse,rgba(201,168,76,.06) 0%,transparent 70%);pointer-events:none;}
+.cta-forms{display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;margin-top:3.5rem;}
+.cta-card{background:var(--bg-card);border:1px solid var(--border);padding:2.5rem 3rem;border-radius:4px;width:360px;text-align:left;transition:transform .3s,border-color .3s,background .4s;}
+.cta-card:hover{transform:translateY(-4px);border-color:rgba(201,168,76,.35);}
+.cta-card h4{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:300;color:var(--text-pri);margin-bottom:.75rem;}
+.cta-card p{font-size:.85rem;color:var(--text-sec);line-height:1.7;margin-bottom:2rem;}
+.input-row{display:flex;flex-direction:column;gap:.75rem;}
+.input-field{background:var(--border-sub);border:1px solid var(--border-sub);color:var(--text-pri);padding:.85rem 1.25rem;border-radius:2px;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:300;width:100%;outline:none;transition:border-color .3s,background .4s;}
+.input-field::placeholder{color:var(--text-muted);}
+.input-field:focus{border-color:rgba(201,168,76,.4);}
+.form-msg{display:none;font-size:.88rem;padding:1.1rem 1.25rem;border-radius:4px;margin-top:.75rem;text-align:center;line-height:1.7;font-weight:400;}
+.form-msg.success{display:block;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);color:#15803d;}
+.form-msg.error{display:block;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:#dc2626;}
+[data-theme="dark"] .form-msg.success{color:#4ade80;}
+[data-theme="dark"] .form-msg.error{color:#f87171;}
+
+/* FOOTER */
+footer{background:var(--bg-mid);border-top:1px solid var(--border-sub);padding:4rem;transition:background .4s;}
+.footer-inner{max-width:1200px;margin:0 auto;display:flex;align-items:flex-start;justify-content:space-between;gap:4rem;}
+.footer-brand p{font-size:.85rem;color:var(--text-muted);max-width:260px;line-height:1.7;margin-top:1rem;}
+.footer-links h5{font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-sec);margin-bottom:1.25rem;}
+.footer-links ul{list-style:none;}
+.footer-links li{margin-bottom:.75rem;}
+.footer-links a{font-size:.88rem;color:var(--text-muted);text-decoration:none;transition:color .3s;}
+.footer-links a:hover{color:var(--text-pri);}
+.footer-bottom{max-width:1200px;margin:3rem auto 0;padding-top:2rem;border-top:1px solid var(--border-sub);display:flex;align-items:center;justify-content:space-between;font-size:.78rem;color:var(--text-muted);}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0);}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes pulse-ring{0%{box-shadow:0 0 0 0 rgba(245,158,11,.3)}70%{box-shadow:0 0 0 8px rgba(245,158,11,0)}100%{box-shadow:0 0 0 0 rgba(245,158,11,0)}}
+@keyframes scrollLine{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.reveal{opacity:1;transform:translateY(0);transition:opacity .8s ease,transform .8s ease;}
+.reveal.hidden{opacity:0;transform:translateY(32px);}
+.reveal-delay-1{transition-delay:.1s}.reveal-delay-2{transition-delay:.2s}.reveal-delay-3{transition-delay:.3s}.reveal-delay-4{transition-delay:.4s}
+
+@media(max-width:900px){
+  nav{padding:1.2rem 1.5rem;}
+  nav.scrolled{padding:.9rem 1.5rem;}
+  .nav-links{display:none;}
+  .section-inner{padding:0 1.5rem;}
+  .problem-grid,.benefits-split,.solution-steps{grid-template-columns:1fr;gap:2rem;}
+  .uni-grid{grid-template-columns:repeat(2,1fr);}
+  .status-features{grid-template-columns:1fr 1fr;}
+  .stats-bar{flex-wrap:wrap;padding:2rem 1.5rem;}
+  .stat-item::after{display:none;}
+  .footer-inner{flex-direction:column;gap:2.5rem;}
+  .footer-bottom{flex-direction:column;gap:1rem;text-align:center;}
+  .cta-forms{flex-direction:column;align-items:center;}
+  .cta-card{width:100%;max-width:420px;}
+  .unis-header{flex-direction:column;align-items:flex-start;}
+}
+/* Fallback: force hero elements visible if animation stalls */
+
+/* After 3s, force everything visible regardless */
+
+
+@media(max-width:600px){
+  .uni-grid{grid-template-columns:1fr;}
+  .status-features{grid-template-columns:1fr;}
+  h1{font-size:3rem;}
+  .progress-row{gap:32px;}
+  .ctrl-btn span.ctrl-label{display:none;}
+}
+</style>
+</head>
+<body>
+
+<nav id="navbar">
+  <a href="#" class="nav-logo">Silk<span>Gate</span></a>
+  <ul class="nav-links">
+    <li><a href="#problem"      data-i18n="nav.problem">The Problem</a></li>
+    <li><a href="#universities" data-i18n="nav.unis">Universities</a></li>
+    <li><a href="#status"       data-i18n="nav.status">Status</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="ctrl-pill">
+      <button class="ctrl-btn active" id="btn-dark"  onclick="setTheme('dark')">🌙 <span class="ctrl-label" data-i18n="ctrl.dark">Dark</span></button>
+      <button class="ctrl-btn"        id="btn-light" onclick="setTheme('light')">☀️ <span class="ctrl-label" data-i18n="ctrl.light">Light</span></button>
+      <div class="ctrl-sep"></div>
+      <button class="ctrl-btn active" id="btn-en" onclick="setLang('en')">EN</button>
+      <button class="ctrl-btn"        id="btn-uz" onclick="setLang('uz')">UZ</button>
+    </div>
+    <a href="#cta" class="btn-nav" data-i18n="nav.access">Early Access</a>
+  </div>
+</nav>
+
+<section id="hero">
+  <div class="hero-bg"></div><div class="hero-grid"></div>
+  <div class="hero-eyebrow" data-i18n="hero.eyebrow">Uzbekistan's First</div>
+  <h1 data-i18n="hero.h1">One Application.<br><em>Every University.</em></h1>
+  <p class="hero-sub" data-i18n="hero.sub">A centralized admissions platform for Uzbekistan — apply to 73+ universities with a single profile, track your status in real time.</p>
+  <div class="hero-ctas">
+    <a href="#universities" class="btn-primary"   data-i18n="hero.cta1">Explore Universities</a>
+    <a href="#cta"          class="btn-secondary" data-i18n="hero.cta2">Get Early Access</a>
+  </div>
+  <div class="hero-badge"><div class="hero-badge-dot"></div><span data-i18n="hero.badge">In development · 2025</span></div>
+  <div class="hero-scroll"><div class="scroll-line"></div><span data-i18n="hero.scroll">Scroll</span></div>
+</section>
+
+<div class="stats-bar reveal">
+  <div class="stat-item"><div class="stat-num">73+</div><div class="stat-label" data-i18n="stats.unis">Universities listed</div></div>
+  <div class="stat-item"><div class="stat-num">1</div><div class="stat-label"   data-i18n="stats.profile">Application profile</div></div>
+  <div class="stat-item"><div class="stat-num">12+</div><div class="stat-label" data-i18n="stats.cities">Cities covered</div></div>
+  <div class="stat-item"><div class="stat-num">100%</div><div class="stat-label" data-i18n="stats.free">Free for students</div></div>
+</div>
+
+<section id="problem">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-eyebrow" data-i18n="problem.eyebrow">The Problem</div>
+      <h2 data-i18n="problem.h2">Applying to university<br>in Uzbekistan is <em>broken.</em></h2>
+    </div>
+    <div class="problem-grid">
+      <div class="problem-text reveal reveal-delay-1">
+        <p data-i18n="problem.p1">Every university in Uzbekistan has its own application portal, its own process, its own document requirements. Students spend weeks repeating the same information across dozens of separate systems.</p>
+        <p data-i18n="problem.p2">International students face the added challenge of navigating unfamiliar processes with little guidance. The system is fragmented, opaque, and exhausting — and it shouldn't be.</p>
+        <p data-i18n="problem.p3">We're fixing that.</p>
+      </div>
+      <div class="problem-cards">
+        <div class="problem-card reveal reveal-delay-1"><h4 data-i18n="problem.c1h">Fragmented portals</h4><p data-i18n="problem.c1p">Each university runs a completely separate application system with different logins, formats, and requirements.</p></div>
+        <div class="problem-card reveal reveal-delay-2"><h4 data-i18n="problem.c2h">Repeated documentation</h4><p data-i18n="problem.c2p">Students upload the same transcripts, essays, and personal details 5, 10, even 20 separate times.</p></div>
+        <div class="problem-card reveal reveal-delay-3"><h4 data-i18n="problem.c3h">No status visibility</h4><p data-i18n="problem.c3p">After submitting, students hear nothing. No tracking, no timeline, no transparency.</p></div>
+        <div class="problem-card reveal reveal-delay-4"><h4 data-i18n="problem.c4h">Hard for international students</h4><p data-i18n="problem.c4p">No centralized information makes it nearly impossible to navigate the landscape.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="solution">
+  <div class="section-inner">
+    <div class="reveal" style="text-align:center;max-width:700px;margin:0 auto 1rem;">
+      <div class="section-eyebrow" data-i18n="solution.eyebrow">How It Works</div>
+      <h2 data-i18n="solution.h2">One profile.<br><em>Apply everywhere.</em></h2>
+    </div>
+    <div class="solution-steps">
+      <div class="step-card reveal reveal-delay-1"><div class="step-num">01</div><div class="step-icon">✦</div><h3 data-i18n="solution.s1h">Build your profile once</h3><p data-i18n="solution.s1p">Enter your personal info, family background, academic history, activities, and essay — one time. Your profile is complete and ready to use.</p></div>
+      <div class="step-card reveal reveal-delay-2"><div class="step-num">02</div><div class="step-icon">◎</div><h3 data-i18n="solution.s2h">Choose your universities</h3><p data-i18n="solution.s2p">Browse 73+ universities across Uzbekistan. Filter by city, program, and language of instruction. Add up to 20 to your list.</p></div>
+      <div class="step-card reveal reveal-delay-3"><div class="step-num">03</div><div class="step-icon">→</div><h3 data-i18n="solution.s3h">Submit &amp; track in real time</h3><p data-i18n="solution.s3p">Send your single application to every university on your list. Watch your status update live — from received, to reviewing, to decision.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="benefits">
+  <div class="section-inner">
+    <div class="reveal" style="text-align:center;max-width:700px;margin:0 auto 4rem;">
+      <div class="section-eyebrow" data-i18n="benefits.eyebrow">Who It's For</div>
+      <h2 data-i18n="benefits.h2">Built for <em>both sides</em><br>of admissions.</h2>
+    </div>
+    <div class="benefits-split reveal">
+      <div class="benefit-panel students">
+        <h3><span data-i18n="benefits.students">Students</span></h3>
+        <ul class="benefit-list">
+          <li data-i18n="benefits.s1">Apply to multiple universities with a single profile</li>
+          <li data-i18n="benefits.s2">Track application status in real time — no more guessing</li>
+          <li data-i18n="benefits.s3">Upload documents once, use them everywhere</li>
+          <li data-i18n="benefits.s4">Discover universities and programs you didn't know existed</li>
+          <li data-i18n="benefits.s5">International student? Everything is in English</li>
+          <li data-i18n="benefits.s6">100% free to use, always</li>
+        </ul>
+      </div>
+      <div class="benefit-panel universities">
+        <h3><span data-i18n="benefits.unis">Universities</span></h3>
+        <ul class="benefit-list">
+          <li data-i18n="benefits.u1">All your applicants in one organized dashboard</li>
+          <li data-i18n="benefits.u2">Standardized data — no more inconsistent formats</li>
+          <li data-i18n="benefits.u3">Review, shortlist, and communicate with applicants directly</li>
+          <li data-i18n="benefits.u4">Reach students who wouldn't have found you otherwise</li>
+          <li data-i18n="benefits.u5">Reduce administrative burden on your admissions team</li>
+          <li data-i18n="benefits.u6">Early adopters shape the platform's direction</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="universities">
+  <div class="section-inner">
+    <div class="unis-header reveal">
+      <div>
+        <div class="section-eyebrow" data-i18n="unis.eyebrow">Partner Universities</div>
+        <h2 data-i18n="unis.h2">73 universities.<br><em>One application.</em></h2>
+      </div>
+      <div class="unis-count" data-i18n="unis.sub">Tashkent · Samarkand · Bukhara · Namangan · Fergana</div>
+    </div>
+  </div>
+  <div class="uni-marquee-wrap reveal"><div class="uni-marquee" id="marquee"></div></div>
+  <div class="section-inner">
+    <div class="uni-grid">
+      <div class="uni-tile reveal reveal-delay-1"><div class="uni-tile-name">Sharda University Uzbekistan</div><div class="uni-tile-tag">Tashkent</div></div>
+      <div class="uni-tile reveal reveal-delay-1"><div class="uni-tile-name">Central Asian University (Akfa)</div><div class="uni-tile-tag">Tashkent</div></div>
+      <div class="uni-tile reveal reveal-delay-2"><div class="uni-tile-name">Tashkent Metropolitan University</div><div class="uni-tile-tag">Tashkent</div></div>
+      <div class="uni-tile reveal reveal-delay-2"><div class="uni-tile-name">TEAM University</div><div class="uni-tile-tag">Tashkent</div></div>
+      <div class="uni-tile reveal reveal-delay-3"><div class="uni-tile-name">Samarkand International University of Technology</div><div class="uni-tile-tag">Samarkand</div></div>
+      <div class="uni-tile reveal reveal-delay-3"><div class="uni-tile-name">Bukhara International University</div><div class="uni-tile-tag">Bukhara</div></div>
+      <div class="uni-tile reveal reveal-delay-4"><div class="uni-tile-name">PDP University</div><div class="uni-tile-tag">Tashkent</div></div>
+      <div class="uni-tile reveal reveal-delay-4"><div class="uni-tile-name">TOBB ETU Tashkent</div><div class="uni-tile-tag">Tashkent</div></div>
+      <div class="uni-tile reveal reveal-delay-1"><div class="uni-tile-name">Zarmed University</div><div class="uni-tile-tag">Tashkent</div></div>
+      <div class="uni-tile reveal reveal-delay-2"><div class="uni-tile-name">Diplomat University</div><div class="uni-tile-tag">Tashkent</div></div>
+      <div class="uni-tile reveal reveal-delay-3"><div class="uni-tile-name">Angren University</div><div class="uni-tile-tag">Angren</div></div>
+      <div class="uni-tile reveal reveal-delay-4"><div class="uni-tile-name" data-i18n="unis.more">+ 61 more universities</div><div class="uni-tile-tag" data-i18n="unis.nationwide">Nationwide</div></div>
+    </div>
+    <div class="view-all-wrap reveal"><p style="color:var(--text-sec);font-size:.88rem;" data-i18n="unis.disclaimer">We aim to partner with all 73 universities listed. Partnerships in progress.</p></div>
+  </div>
+</section>
+
+<section id="status">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="status-badge"><div class="status-badge-dot"></div><span data-i18n="status.badge">In Active Development</span></div>
+      <h2 data-i18n="status.h2">We're building <em>something real.</em></h2>
+      <p style="color:var(--text-sec);max-width:560px;margin:0 auto;line-height:1.9;" data-i18n="status.sub">SilkGate is currently under active development. Here's what we're building and where we are — no vaporware.</p>
+    </div>
+    <div class="status-features">
+      <div class="status-feature reveal reveal-delay-1"><span class="status-feature-icon">◈</span><h4 data-i18n="status.f1h">Student application portal</h4><p data-i18n="status.f1p">Profile builder, college list management, document upload, real-time status tracking.</p></div>
+      <div class="status-feature reveal reveal-delay-2"><span class="status-feature-icon">◉</span><h4 data-i18n="status.f2h">University admission dashboard</h4><p data-i18n="status.f2p">Admissions teams get a centralized inbox — review, filter, and manage applicants in one place.</p></div>
+      <div class="status-feature reveal reveal-delay-3"><span class="status-feature-icon">◎</span><h4 data-i18n="status.f3h">Document management</h4><p data-i18n="status.f3p">Upload once. Transcripts, test scores, and IDs are securely stored and sent to every university.</p></div>
+      <div class="status-feature reveal reveal-delay-4"><span class="status-feature-icon">✦</span><h4 data-i18n="status.f4h">Smart notifications</h4><p data-i18n="status.f4p">Email and in-app alerts the moment a university updates your application status.</p></div>
+    </div>
+    <div style="margin-top:5rem;" class="reveal">
+      <p style="text-align:center;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-sec);margin-bottom:3rem;" data-i18n="status.progress">Build progress</p>
+      <div class="progress-row">
+        <div class="progress-step"><div class="progress-dot done">✓</div><div class="progress-label" data-i18n="status.p1">Architecture &amp; design</div></div>
+        <div class="progress-step"><div class="progress-dot done">✓</div><div class="progress-label" data-i18n="status.p2">University database</div></div>
+        <div class="progress-step"><div class="progress-dot active">●</div><div class="progress-label" data-i18n="status.p3">Core app build</div></div>
+        <div class="progress-step"><div class="progress-dot upcoming">○</div><div class="progress-label" data-i18n="status.p4">Uni portal</div></div>
+        <div class="progress-step"><div class="progress-dot upcoming">○</div><div class="progress-label" data-i18n="status.p5">Beta launch</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CTA + FORMSPREE FORMS ══ -->
+<section id="cta">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-eyebrow" data-i18n="cta.eyebrow">Get Involved</div>
+      <h2 data-i18n="cta.h2">Be part of<br><em>the beginning.</em></h2>
+      <p style="color:var(--text-sec);max-width:500px;margin:0 auto;line-height:1.9;" data-i18n="cta.sub">Whether you're a student wanting early access or a university interested in partnering — we want to hear from you.</p>
+    </div>
+    <div class="cta-forms">
+
+      <!-- STUDENT WAITLIST
+           ─────────────────────────────────────────────────────
+           SETUP (takes 3 minutes, totally free):
+           1. Go to https://formspree.io and sign up (free)
+           2. Click "New Form" → name it "Student Waitlist"
+           3. Copy the form endpoint — looks like:
+              https://formspree.io/f/xzzpqrst
+           4. Replace the action URL below with yours
+           5. In Formspree dashboard → "Notifications" tab
+              → enable "Auto-Reply" and write your email
+              (the _autoresponse field below also sets a basic reply)
+           ───────────────────────────────────────────────────── -->
+      <div class="cta-card reveal reveal-delay-1">
+        <h4 data-i18n="cta.s.title">For Students</h4>
+        <p data-i18n="cta.s.desc">Join the waitlist and be the first to apply when we launch. We'll keep you updated.</p>
+        <form id="student-form"
+              action="https://formspree.io/f/mdawbdgq"
+              method="POST" novalidate>
+          <input type="hidden" name="_subject"      value="New SilkGate Student Waitlist Signup">
+          <input type="hidden" name="_autoresponse" value="Salom! Thank you for joining the SilkGate waitlist 🎓 You're among the first to sign up for Uzbekistan's first centralized university admissions platform. We'll email you the moment we launch. — The SilkGate Team | silkgate.uz">
+          <div class="input-row">
+            <input type="text"  name="name"  class="input-field" required
+                   data-ph-en="Full name" data-ph-uz="To'liq ismingiz" placeholder="Full name">
+            <input type="email" name="email" class="input-field" required
+                   data-ph-en="Email address" data-ph-uz="Email manzilingiz" placeholder="Email address">
+            <button type="submit" class="btn-primary" style="width:100%;" data-i18n="cta.s.btn">Join Waitlist →</button>
+          </div>
+          <div class="form-msg" id="student-msg"></div>
+        </form>
+      </div>
+
+      <!-- UNIVERSITY PARTNERSHIP
+           ─────────────────────────────────────────────────────
+           Same steps — create a second Formspree form.
+           Replace YOUR_UNIVERSITY_FORM_ID below.
+           ───────────────────────────────────────────────────── -->
+      <div class="cta-card reveal reveal-delay-2">
+        <h4 data-i18n="cta.u.title">For Universities</h4>
+        <p data-i18n="cta.u.desc">Early partners will help shape the platform and get priority onboarding when we go live.</p>
+        <form id="uni-form"
+              action="https://formspree.io/f/maqpvbjw"
+              method="POST" novalidate>
+          <input type="hidden" name="_subject"      value="New SilkGate University Partnership Inquiry">
+          <input type="hidden" name="_autoresponse" value="Thank you for your interest in partnering with SilkGate! We're building Uzbekistan's first centralized admissions platform and we'd love to have you onboard. Our team will reach out shortly to discuss next steps. — The SilkGate Team | silkgate.uz">
+          <div class="input-row">
+            <input type="text"  name="university" class="input-field" required
+                   data-ph-en="University name" data-ph-uz="Universitet nomi" placeholder="University name">
+            <input type="email" name="email"      class="input-field" required
+                   data-ph-en="Contact email" data-ph-uz="Aloqa uchun email" placeholder="Contact email">
+            <button type="submit" class="btn-primary" style="width:100%;" data-i18n="cta.u.btn">Request Partnership →</button>
+          </div>
+          <div class="form-msg" id="uni-msg"></div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="#" class="nav-logo">Silk<span>Gate</span></a>
+      <p data-i18n="footer.desc">Uzbekistan's first centralized university admissions platform. One application. Every university.</p>
+    </div>
+    <div class="footer-links">
+      <h5 data-i18n="footer.platform">Platform</h5>
+      <ul>
+        <li><a href="#problem"      data-i18n="nav.problem">The Problem</a></li>
+        <li><a href="#solution"     data-i18n="nav.solution">How It Works</a></li>
+        <li><a href="#universities" data-i18n="nav.unis">Universities</a></li>
+        <li><a href="#status"       data-i18n="nav.status">Build Status</a></li>
+      </ul>
+    </div>
+    <div class="footer-links">
+      <h5 data-i18n="footer.involved">Get Involved</h5>
+      <ul>
+        <li><a href="#cta" data-i18n="footer.student">Student Early Access</a></li>
+        <li><a href="#cta" data-i18n="footer.uni">University Partnership</a></li>
+        <li><a href="/cdn-cgi/l/email-protection#bcd4d9d0d0d3fccfd5d0d7dbddc8d992c9c6"><span class="__cf_email__" data-cfemail="0f676a6363604f7c666364686e7b6a217a75">[email&#160;protected]</span></a></li>
+      </ul>
+    </div>
+    <div class="footer-links">
+      <h5 data-i18n="footer.legal">Legal</h5>
+      <ul>
+        <li><a href="#" data-i18n="footer.privacy">Privacy Policy</a></li>
+        <li><a href="#" data-i18n="footer.terms">Terms of Use</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 SilkGate. <span data-i18n="footer.rights">All rights reserved.</span></span>
+    <span data-i18n="footer.location">Tashkent, Uzbekistan</span>
+  </div>
+</footer>
+
+<script>
+/* STATE + GLOBAL FUNCTIONS — must come before translations */
+var lang = localStorage.getItem('sg-lang') || 'en';
+
+function setTheme(t){
+  document.documentElement.setAttribute('data-theme', t);
+  var bd=document.getElementById('btn-dark'), bl=document.getElementById('btn-light');
+  if(bd) bd.classList.toggle('active', t==='dark');
+  if(bl) bl.classList.toggle('active', t==='light');
+  try{ localStorage.setItem('sg-theme', t); }catch(e){}
+}
+
+function setLang(l){
+  lang = l;
+  document.documentElement.setAttribute('data-lang', l);
+  var be=document.getElementById('btn-en'), bu=document.getElementById('btn-uz');
+  if(be) be.classList.toggle('active', l==='en');
+  if(bu) bu.classList.toggle('active', l==='uz');
+  try{ localStorage.setItem('sg-lang', l); }catch(e){}
+  if(typeof T === 'undefined') return;
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var v = T[l][el.getAttribute('data-i18n')];
+    if(v !== undefined) el.innerHTML = v;
+  });
+  document.querySelectorAll('[data-ph-'+l+']').forEach(function(el){
+    el.placeholder = el.getAttribute('data-ph-'+l);
+  });
+}
+</script>
+<script>
+/* ══ TRANSLATIONS ══ */
+const T = {
+en:{
+"nav.problem":"The Problem","nav.unis":"Universities","nav.status":"Status","nav.access":"Early Access","nav.solution":"How It Works",
+"ctrl.dark":"Dark","ctrl.light":"Light",
+"hero.eyebrow":"Uzbekistan's First","hero.h1":"One Application.<br><em>Every University.</em>",
+"hero.sub":"A centralized admissions platform for Uzbekistan — apply to 73+ universities with a single profile, track your status in real time.",
+"hero.cta1":"Explore Universities","hero.cta2":"Get Early Access",
+"hero.badge":"In development · 2025","hero.scroll":"Scroll",
+"stats.unis":"Universities listed","stats.profile":"Application profile","stats.cities":"Cities covered","stats.free":"Free for students",
+"problem.eyebrow":"The Problem","problem.h2":"Applying to university<br>in Uzbekistan is <em>broken.</em>",
+"problem.p1":"Every university in Uzbekistan has its own application portal, its own process, its own document requirements. Students spend weeks repeating the same information across dozens of separate systems.",
+"problem.p2":"International students face the added challenge of navigating unfamiliar processes with little guidance. The system is fragmented, opaque, and exhausting — and it shouldn't be.",
+"problem.p3":"We're fixing that.",
+"problem.c1h":"Fragmented portals","problem.c1p":"Each university runs a completely separate application system with different logins, formats, and requirements.",
+"problem.c2h":"Repeated documentation","problem.c2p":"Students upload the same transcripts, essays, and personal details 5, 10, even 20 separate times.",
+"problem.c3h":"No status visibility","problem.c3p":"After submitting, students hear nothing. No tracking, no timeline, no transparency.",
+"problem.c4h":"Hard for international students","problem.c4p":"No centralized information makes it nearly impossible to navigate the landscape.",
+"solution.eyebrow":"How It Works","solution.h2":"One profile.<br><em>Apply everywhere.</em>",
+"solution.s1h":"Build your profile once","solution.s1p":"Enter your personal info, family background, academic history, activities, and essay — one time. Your profile is complete and ready to use.",
+"solution.s2h":"Choose your universities","solution.s2p":"Browse 73+ universities across Uzbekistan. Filter by city, program, and language of instruction. Add up to 20 to your list.",
+"solution.s3h":"Submit & track in real time","solution.s3p":"Send your single application to every university on your list. Watch your status update live — from received, to reviewing, to decision.",
+"benefits.eyebrow":"Who It's For","benefits.h2":"Built for <em>both sides</em><br>of admissions.",
+"benefits.students":"Students","benefits.unis":"Universities",
+"benefits.s1":"Apply to multiple universities with a single profile","benefits.s2":"Track application status in real time — no more guessing",
+"benefits.s3":"Upload documents once, use them everywhere","benefits.s4":"Discover universities and programs you didn't know existed",
+"benefits.s5":"International student? Everything is in English","benefits.s6":"100% free to use, always",
+"benefits.u1":"All your applicants in one organized dashboard","benefits.u2":"Standardized data — no more inconsistent formats",
+"benefits.u3":"Review, shortlist, and communicate with applicants directly","benefits.u4":"Reach students who wouldn't have found you otherwise",
+"benefits.u5":"Reduce administrative burden on your admissions team","benefits.u6":"Early adopters shape the platform's direction",
+"unis.eyebrow":"Partner Universities","unis.h2":"73 universities.<br><em>One application.</em>",
+"unis.sub":"Tashkent · Samarkand · Bukhara · Namangan · Fergana","unis.more":"+ 61 more universities","unis.nationwide":"Nationwide",
+"unis.disclaimer":"We aim to partner with all 73 universities listed. Partnerships in progress.",
+"status.badge":"In Active Development","status.h2":"We're building <em>something real.</em>",
+"status.sub":"SilkGate is currently under active development. Here's what we're building — no vaporware.",
+"status.f1h":"Student application portal","status.f1p":"Profile builder, college list management, document upload, real-time status tracking.",
+"status.f2h":"University admission dashboard","status.f2p":"Admissions teams get a centralized inbox — review, filter, and manage applicants in one place.",
+"status.f3h":"Document management","status.f3p":"Upload once. Transcripts, test scores, and IDs are securely stored and sent to every university.",
+"status.f4h":"Smart notifications","status.f4p":"Email and in-app alerts the moment a university updates your application status.",
+"status.progress":"Build progress","status.p1":"Architecture & design","status.p2":"University database","status.p3":"Core app build","status.p4":"Uni portal","status.p5":"Beta launch",
+"cta.eyebrow":"Get Involved","cta.h2":"Be part of<br><em>the beginning.</em>",
+"cta.sub":"Whether you're a student wanting early access or a university interested in partnering — we want to hear from you.",
+"cta.s.title":"For Students","cta.s.desc":"Join the waitlist and be the first to apply when we launch. We'll keep you updated.","cta.s.btn":"Join Waitlist →",
+"cta.u.title":"For Universities","cta.u.desc":"Early partners will help shape the platform and get priority onboarding when we go live.","cta.u.btn":"Request Partnership →",
+"cta.ok.student":"🎉 You're on the list! We'll send you early access the moment we launch beta. Keep an eye on your inbox — big things are coming.","cta.ok.uni":"🤝 Got it! We'll be in touch soon to discuss partnering with SilkGate. Check your email for a confirmation.","cta.err":"Something went wrong — please email hello@silkgate.uz",
+"footer.desc":"Uzbekistan's first centralized university admissions platform. One application. Every university.",
+"footer.platform":"Platform","footer.involved":"Get Involved","footer.legal":"Legal",
+"footer.student":"Student Early Access","footer.uni":"University Partnership","footer.privacy":"Privacy Policy","footer.terms":"Terms of Use","footer.rights":"All rights reserved.","footer.location":"Tashkent, Uzbekistan",
+},
+uz:{
+"nav.problem":"Muammo","nav.unis":"Universitetlar","nav.status":"Holat","nav.access":"Erta Kirish","nav.solution":"Qanday ishlaydi",
+"ctrl.dark":"Qoʻngʻir","ctrl.light":"Yorqin",
+"hero.eyebrow":"O'zbekistondagi birinchi","hero.h1":"Bitta ariza.<br><em>Barcha universitetlar.</em>",
+"hero.sub":"O'zbekiston universitetlari uchun markazlashtirilgan qabul platformasi — bitta profil bilan 73+ universitetga ariza bering, holatni real vaqtda kuzating.",
+"hero.cta1":"Universitetlarni ko'rish","hero.cta2":"Erta kirishga yozilish",
+"hero.badge":"Ishlab chiqilmoqda · 2025","hero.scroll":"Pastga",
+"stats.unis":"Universitetlar ro'yxatda","stats.profile":"Ariza profili","stats.cities":"Shaharlar qamrovi","stats.free":"Talabalar uchun bepul",
+"problem.eyebrow":"Muammo","problem.h2":"O'zbekistonda universitetga<br>ariza berish <em>qiyin.</em>",
+"problem.p1":"O'zbekistondagi har bir universitetning o'z portali, jarayoni va hujjat talablari bor. Bir necha universitetga ariza bermoqchi bo'lgan talabalar bir xil ma'lumotlarni o'nlab tizimlarda takrorlashga haftalar sarflaydi.",
+"problem.p2":"Xalqaro talabalar uchun yo'riqnomasiz notanish jarayonlarda yo'l topish yanada qiyinroq. Tizim bo'lingan, noaniq va charchatuvchi — bunday bo'lmasligi kerak.",
+"problem.p3":"Biz buni hal qilmoqdamiz.",
+"problem.c1h":"Alohida portallar","problem.c1p":"Har bir universitet turli login, format va talablarga ega alohida ariza tizimini boshqaradi.",
+"problem.c2h":"Hujjatlarni takrorlash","problem.c2p":"Talabalar bir xil guvohnomalar, insho va shaxsiy ma'lumotlarni 5, 10 va hatto 20 marta yuklaydi.",
+"problem.c3h":"Holat ko'rinmasligi","problem.c3p":"Topshirgandan so'ng talabalar hech narsani eshitmaydi. Kuzatuv yo'q, muddat yo'q, shaffoflik yo'q.",
+"problem.c4h":"Xalqaro talabalar uchun qiyin","problem.c4p":"Markazlashtirilgan ma'lumot yo'qligi xalqaro talabalar uchun yo'nalishni tushunishni deyarli imkonsiz qiladi.",
+"solution.eyebrow":"Qanday ishlaydi","solution.h2":"Bitta profil.<br><em>Hamma joyga ariza.</em>",
+"solution.s1h":"Profilingizni bir marta to'ldiring","solution.s1p":"Shaxsiy ma'lumotlar, oila, ta'lim tarixi, faoliyat va insho — bir marta kiriting. Profilingiz tayyor.",
+"solution.s2h":"Universitetlarni tanlang","solution.s2p":"O'zbekiston bo'ylab 73+ universitetni ko'rib chiqing. Shahar, yo'nalish va til bo'yicha filtrlang. 20 tagacha qo'shing.",
+"solution.s3h":"Yuboring va real vaqtda kuzating","solution.s3p":"Ro'yxatingizdagi har bir universitetga bitta arizangizni yuboring. Holatni jonli ko'ring — qabul qilindi, ko'rib chiqilmoqda, qaror.",
+"benefits.eyebrow":"Kim uchun","benefits.h2":"Qabulning <em>ikki tomoni</em> uchun<br>qurilgan.",
+"benefits.students":"Talabalar","benefits.unis":"Universitetlar",
+"benefits.s1":"Bitta profil bilan bir necha universitetga ariza bering","benefits.s2":"Ariza holatini real vaqtda kuzating — taxminlarsiz",
+"benefits.s3":"Hujjatlarni bir marta yuklang, hamma joyda ishlating","benefits.s4":"Siz bilmagan universitetlar va dasturlarni kashf eting",
+"benefits.s5":"Xalqaro talaba? Hamma narsa ingliz tilida","benefits.s6":"Har doim 100% bepul",
+"benefits.u1":"Barcha abituriyentlaringiz tartibli dashboardda","benefits.u2":"Standartlashtirilgan ma'lumotlar — nomuvofiq formatlar yo'q",
+"benefits.u3":"Abituriyentlarni ko'rib chiqing, saralang va bevosita muloqot qiling","benefits.u4":"Aks holda topmaydigan talabalarga ering",
+"benefits.u5":"Qabul jamoangizdan ma'muriy yukni kamaytiring","benefits.u6":"Dastlabki ishtirokchilar platformaning yo'nalishini shakllantiradi",
+"unis.eyebrow":"Hamkor Universitetlar","unis.h2":"73 universitet.<br><em>Bitta ariza.</em>",
+"unis.sub":"Toshkent · Samarqand · Buxoro · Namangan · Farg'ona","unis.more":"+ 61 ta boshqa universitet","unis.nationwide":"Butun respublika",
+"unis.disclaimer":"Ro'yxatdagi barcha 73 ta universitet bilan hamkorlik qilishni maqsad qilganmiz.",
+"status.badge":"Faol Ishlab Chiqilmoqda","status.h2":"Biz <em>haqiqiy narsa</em> quryapmiz.",
+"status.sub":"SilkGate hozirda faol ishlab chiqilmoqda. Nima qurayotganimiz va qayerdamiz — hech qanday soxta va'da yo'q.",
+"status.f1h":"Talaba ariza portali","status.f1p":"Profil quruvchi, kollej ro'yxatini boshqarish, hujjat yuklash, real vaqtda holat kuzatuvi.",
+"status.f2h":"Universitet qabul dashboardi","status.f2p":"Qabul jamoalari markazlashtirilgan kirish qutisiga ega — bir joyda boshqaring.",
+"status.f3h":"Hujjatlarni boshqarish","status.f3p":"Bir marta yuklang. Guvohnomalar va shaxsiy hujjatlar xavfsiz saqlanadi va har bir universitetga yuboriladi.",
+"status.f4h":"Aqlli bildirishnomalar","status.f4p":"Universitet ariza holatini yangilagan zahoti email va ilova ichidagi ogohlantirishlar.",
+"status.progress":"Qurilish jarayoni","status.p1":"Arxitektura va dizayn","status.p2":"Universitetlar bazasi","status.p3":"Asosiy ilova","status.p4":"Uni portali","status.p5":"Beta ishga tushirish",
+"cta.eyebrow":"Ishtirok eting","cta.h2":"<em>Boshlanishning</em><br>bir qismi bo'ling.",
+"cta.sub":"Siz erta kirishni istagan talaba yoki hamkorlikka qiziqayotgan universitet bo'lasiz — biz sizdan eshitishni istaymiz.",
+"cta.s.title":"Talabalar uchun","cta.s.desc":"Kutish ro'yxatiga qo'shiling va biz ishga tushganda birinchi bo'lib ariza bering.","cta.s.btn":"Kutish ro'yxatiga qo'shilish →",
+"cta.u.title":"Universitetlar uchun","cta.u.desc":"Dastlabki hamkorlar platformani shakllantirishga yordam beradi va ustuvor onboarding oladi.","cta.u.btn":"Hamkorlik so'rash →",
+"cta.ok.student":"🎉 Ro'yxatdasiz! Beta versiyamiz chiqishi bilan erta kirishni emailingizga yuboramiz. Katta yangiliklar kutmoqda!","cta.ok.uni":"🤝 Qabul qilindi! SilkGate bilan hamkorlik haqida tez orada bog'lanamiz. Emailingizni tekshiring.","cta.err":"Xatolik yuz berdi — hello@silkgate.uz ga yozing.",
+"footer.desc":"O'zbekistonning birinchi markazlashtirilgan universitetga qabul platformasi. Bitta ariza. Har bir universitet.",
+"footer.platform":"Platforma","footer.involved":"Ishtirok eting","footer.legal":"Huquqiy",
+"footer.student":"Talabalar uchun erta kirish","footer.uni":"Universitet hamkorligi","footer.privacy":"Maxfiylik siyosati","footer.terms":"Foydalanish shartlari","footer.rights":"Barcha huquqlar himoyalangan.","footer.location":"Toshkent, O'zbekiston",
+}};
+
+
+/* ══ NAV SCROLL ══ */
+window.addEventListener('scroll', function(){
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+/* ══ MARQUEE ══ */
+var UNIS=[
+  ["Westminster International University in Tashkent","Toshkent"],
+  ["Inha University in Tashkent","Toshkent"],
+  ["Turin Polytechnic University","Toshkent"],
+  ["Webster University Tashkent","Toshkent"],
+  ["Ajou University in Tashkent","Toshkent"],
+  ["Japan Digital University","Toshkent"],
+  ["Kimyo International University","Toshkent · Samarqand · Namangan"],
+  ["IT Park University","Toshkent"],
+  ["Alfraganus University","Toshkent"],
+  ["Amity University Tashkent","Toshkent"],
+  ["Korea International University","Farg'ona"],
+  ["Nordic International University","Toshkent"]
+];
+
+function buildMarquee(){
+  var m = document.getElementById('marquee');
+  if(!m) return;
+  var all = UNIS.concat(UNIS);
+  m.innerHTML = all.map(function(u){
+    return '<div class="uni-card"><div class="uni-card-dot"></div><div class="uni-card-name">'+u[0]+'</div><div class="uni-card-location">'+u[1]+'</div></div>';
+  }).join('');
+}
+
+/* ══ FORM WIRE ══ */
+function wireForm(formId, msgId, okKey, errKey){
+  var form = document.getElementById(formId);
+  var msg  = document.getElementById(msgId);
+  if(!form || !msg) return;
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var btn  = form.querySelector('button[type="submit"]');
+    var orig = btn.innerHTML;
+
+    // Validate
+    var valid = true;
+    form.querySelectorAll('input[required]').forEach(function(inp){
+      if(!inp.value.trim()){
+        inp.style.borderColor = 'rgba(239,68,68,.5)';
+        setTimeout(function(){ inp.style.borderColor = ''; }, 2000);
+        valid = false;
+      }
+    });
+    if(!valid) return;
+
+    btn.innerHTML = '⏳';
+    btn.disabled  = true;
+    msg.className = 'form-msg';
+
+    fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { 'Accept': 'application/json' }
+    })
+    .then(function(r){
+      if(r.ok){
+        // Show success message
+        msg.textContent = T[lang][okKey];
+        msg.className   = 'form-msg success';
+        form.reset();
+        btn.innerHTML = '✓';
+        // Scroll back to top of page smoothly
+        setTimeout(function(){
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 1800);
+        // Reset button after scroll
+        setTimeout(function(){
+          btn.innerHTML = orig;
+          btn.disabled  = false;
+        }, 4000);
+      } else {
+        throw new Error('bad response');
+      }
+    })
+    .catch(function(){
+      msg.textContent = T[lang][errKey];
+      msg.className   = 'form-msg error';
+      btn.innerHTML   = orig;
+      btn.disabled    = false;
+    });
+  });
+}
+
+/* ══ SCROLL REVEAL ══ */
+var obs = new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      obs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
+
+/* ══ INIT ══ */
+document.addEventListener('DOMContentLoaded', function(){
+  // Force hero visible after 2s in case animations stall
+  setTimeout(function(){
+    document.querySelectorAll('.hero-eyebrow, h1, .hero-sub, .hero-ctas, .hero-badge, .hero-scroll').forEach(function(el){
+      el.style.opacity='1'; el.style.transform='translateY(0)';
+    });
+  }, 2000);
+
+  // Apply saved or default preferences
+  setTheme(localStorage.getItem('sg-theme') || 'dark');
+  setLang(localStorage.getItem('sg-lang')   || 'en');
+
+  // Build scrolling marquee
+  buildMarquee();
+
+  // Wire scroll reveal
+  document.querySelectorAll('.reveal').forEach(function(el){
+    el.classList.add('scroll-anim');
+    obs.observe(el);
+  });
+
+  // Wire both forms
+  wireForm('student-form', 'student-msg', 'cta.ok.student', 'cta.err');
+  wireForm('uni-form',     'uni-msg',     'cta.ok.uni',     'cta.err');
+});
+</script>
+</body>
+</html>
